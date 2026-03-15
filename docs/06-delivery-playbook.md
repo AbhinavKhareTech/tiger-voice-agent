@@ -2,7 +2,7 @@
 
 ## Overview
 
-This playbook describes how Blue Machines deploys voice AI for enterprise customers as a repeatable, predictable process. The model targets 8-12 week deployments with defined deliverables and quality gates at each phase.
+This playbook describes how AhinsaAi deploys voice AI for enterprise customers as a repeatable, predictable process. The model targets 8-12 week deployments with defined deliverables and quality gates at each phase.
 
 The goal is a delivery machine, not a consulting practice: every deployment should be faster than the last because each one feeds reusable patterns back into the platform.
 
