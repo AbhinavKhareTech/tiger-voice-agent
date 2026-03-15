@@ -1,0 +1,20 @@
+{
+  "type": "function",
+  "function": {
+    "name": "trigger_activation",
+    "description": "Activate the customer's Tiger Credit Card. This is IRREVERSIBLE. Only call this when the customer has explicitly confirmed they want to activate AND kyc_status.vkyc_done is true. The system will reject activation if VKYC is not complete.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "description": "The customer's internal ID"
+        }
+      },
+      "required": ["customer_id"]
+    }
+  },
+  "server": {
+    "url": "https://your-orchestrator-url.com/api/vapi/webhook"
+  }
+}

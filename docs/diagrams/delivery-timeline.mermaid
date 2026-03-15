@@ -1,0 +1,53 @@
+---
+title: Blue Machines Enterprise Delivery Model - 12 Week Deployment
+---
+gantt
+    title Enterprise Voice AI Deployment Timeline
+    dateFormat  YYYY-MM-DD
+    axisFormat  Week %W
+
+    section Phase 1: Discovery
+    Stakeholder Interviews          :p1a, 2026-03-16, 5d
+    Journey Mapping                 :p1b, after p1a, 3d
+    Tech Landscape Assessment       :p1c, 2026-03-18, 5d
+    Compliance Requirements         :p1d, 2026-03-21, 3d
+    Discovery Report                :milestone, p1m, 2026-03-27, 0d
+
+    section Phase 2: Solution Design
+    Architecture Design             :p2a, 2026-03-28, 5d
+    Event Schema Design             :p2b, after p2a, 3d
+    Conversation Flow Design        :p2c, 2026-03-30, 7d
+    Compliance Review               :p2d, after p2c, 3d
+    Integration Specification       :p2e, 2026-04-02, 5d
+    Design Sign-off                 :milestone, p2m, 2026-04-11, 0d
+
+    section Phase 3: Integration
+    Build Connectors                :p3a, 2026-04-12, 7d
+    Event Pipeline Setup            :p3b, 2026-04-14, 5d
+    Orchestration Deploy            :p3c, after p3a, 3d
+    Telephony Config                :p3d, 2026-04-16, 5d
+    Integration Testing             :p3e, after p3c, 5d
+    Integration Complete            :milestone, p3m, 2026-04-28, 0d
+
+    section Phase 4: AI Tuning
+    Prompt Development              :p4a, 2026-04-29, 5d
+    Voice Persona Tuning            :p4b, 2026-05-01, 3d
+    Objection Scenario Testing      :p4c, after p4a, 3d
+    Edge Case Testing               :p4d, after p4c, 3d
+    Latency Optimization            :p4e, 2026-05-05, 5d
+    Shadow Testing                  :p4f, after p4d, 3d
+    AI Ready                        :milestone, p4m, 2026-05-13, 0d
+
+    section Phase 5: Pilot
+    5-10% Traffic Deployment        :p5a, 2026-05-14, 3d
+    War Room Monitoring             :p5b, 2026-05-14, 2d
+    Daily Review Cycles             :p5c, after p5b, 8d
+    A/B Comparison Analysis         :p5d, 2026-05-19, 5d
+    Pilot Report                    :milestone, p5m, 2026-05-27, 0d
+
+    section Phase 6: Production
+    Gradual Traffic Ramp            :p6a, 2026-05-28, 10d
+    Human Agent Redeployment        :p6b, 2026-05-30, 7d
+    Operational Handover            :p6c, 2026-06-04, 5d
+    Knowledge Transfer              :p6d, after p6c, 3d
+    Production Live                 :milestone, p6m, 2026-06-10, 0d

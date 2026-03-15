@@ -1,0 +1,62 @@
+---
+title: AI Agent Runtime Pipeline - Single Turn Processing
+---
+sequenceDiagram
+    participant CUST as Customer (Audio)
+    participant RTP as Media Server
+    participant ASR as Streaming ASR
+    participant INT as Intent Detector
+    participant LLM as LLM Agent Planner
+    participant TR as Tool Router
+    participant PG as Policy Gateway
+    participant API as API Gateway
+    participant ENT as Enterprise System
+    participant VAL as Output Validator
+    participant TTS as Streaming TTS
+
+    Note over CUST,TTS: STREAMING PIPELINE (Target: <800ms perceived latency)
+
+    CUST->>RTP: Audio stream (20ms RTP frames)
+    RTP->>ASR: Clean audio (WebSocket stream)
+    
+    Note over ASR: Partial transcripts every 100-300ms
+    ASR-->>INT: Partial transcript (for pre-classification)
+    ASR->>INT: Final transcript (on VAD silence boundary)
+    
+    INT->>LLM: Intent + slots + confidence + conversation history
+
+    Note over LLM: Agent Planner decides: respond / tool_call / escalate
+
+    alt Tool Call Required
+        LLM->>TR: Structured tool call request
+        TR->>TR: Schema validation (correct function + params)
+        TR->>PG: Policy check (consent, PII, rate limit)
+        PG-->>TR: APPROVED / DENIED
+        
+        alt Policy Approved
+            TR->>API: Execute tool call
+            API->>ENT: API request
+            ENT-->>API: Response
+            API-->>TR: Result (PII masked by compliance gateway)
+            TR-->>LLM: Tool result (sanitized)
+        else Policy Denied
+            TR-->>LLM: Denial reason (e.g., "PII access blocked")
+        end
+    end
+
+    Note over LLM: Generate response (streamed token by token)
+    
+    LLM->>VAL: Response text (streaming)
+    
+    Note over VAL: Check: PII patterns, ungrounded claims, compliance
+    
+    alt Validation Passed
+        VAL->>TTS: Approved text (sentence chunks)
+        Note over TTS: Synthesize audio in chunks (200-400ms each)
+        TTS->>RTP: Audio chunks (streaming)
+        RTP->>CUST: RTP audio frames
+    else Validation Failed
+        VAL->>LLM: Regenerate (with constraint)
+    end
+
+    Note over CUST,TTS: Total perceived latency: 400-800ms<br/>(ASR partial + LLM first token + TTS first chunk overlap)

@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  mock-backends:
+    build:
+      context: ./mock_backends
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./mock_backends/seed_data:/app/seed_data:ro
+    environment:
+      - PORT=8001
+      - FAILURE_RATE=${FAILURE_RATE:-0.0}
+      - LATENCY_MS=${LATENCY_MS:-0}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  orchestrator:
+    build:
+      context: ./orchestrator
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - REDIS_URL=redis://redis:6379
+      - MOCK_BACKENDS_URL=http://mock-backends:8001
+      - VAPI_API_KEY=${VAPI_API_KEY:-}
+      - VAPI_ASSISTANT_ID=${VAPI_ASSISTANT_ID:-}
+      - VAPI_PHONE_NUMBER_ID=${VAPI_PHONE_NUMBER_ID:-}
+      - MOCK_MODE=${MOCK_MODE:-true}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      redis:
+        condition: service_healthy
+      mock-backends:
+        condition: service_healthy
+
+volumes:
+  redis_data:

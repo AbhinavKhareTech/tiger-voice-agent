@@ -1,0 +1,36 @@
+{
+  "type": "function",
+  "function": {
+    "name": "transfer_to_human",
+    "description": "Warm transfer the call to a human inside sales agent. Use this when: the customer explicitly asks for a person, 3+ objections remain unresolved, the customer is strongly frustrated, or a system failure blocks the required action. Always provide context so the human agent does not start from scratch.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "description": "The customer's internal ID"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "customer_request",
+            "unresolved_objections",
+            "customer_frustration",
+            "system_failure",
+            "identity_verification_failed",
+            "complex_query"
+          ],
+          "description": "Reason for escalation"
+        },
+        "context": {
+          "type": "string",
+          "description": "Summary of the conversation so far, including any objections raised and actions taken"
+        }
+      },
+      "required": ["customer_id", "reason"]
+    }
+  },
+  "server": {
+    "url": "https://your-orchestrator-url.com/api/vapi/webhook"
+  }
+}

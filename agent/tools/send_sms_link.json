@@ -1,0 +1,25 @@
+{
+  "type": "function",
+  "function": {
+    "name": "send_sms_link",
+    "description": "Send an SMS with a deep link to the customer's registered phone number. Use this when the customer needs a link to complete eKYC, VKYC, or card activation. Maximum 2 SMS per call.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "description": "The customer's internal ID"
+        },
+        "link_type": {
+          "type": "string",
+          "enum": ["ekyc_deeplink", "vkyc_deeplink", "activation_deeplink"],
+          "description": "Type of deep link to send"
+        }
+      },
+      "required": ["customer_id", "link_type"]
+    }
+  },
+  "server": {
+    "url": "https://your-orchestrator-url.com/api/vapi/webhook"
+  }
+}

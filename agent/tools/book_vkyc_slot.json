@@ -1,0 +1,24 @@
+{
+  "type": "function",
+  "function": {
+    "name": "book_vkyc_slot",
+    "description": "Book a VKYC video verification slot for the customer. Only call this after getting available slots from get_vkyc_slots and confirming the customer's preference. Requires consent_status to be true.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "description": "The customer's internal ID"
+        },
+        "slot": {
+          "type": "string",
+          "description": "The selected slot in ISO-8601 format"
+        }
+      },
+      "required": ["customer_id", "slot"]
+    }
+  },
+  "server": {
+    "url": "https://your-orchestrator-url.com/api/vapi/webhook"
+  }
+}

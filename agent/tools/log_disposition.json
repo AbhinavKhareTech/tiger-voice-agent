@@ -1,0 +1,42 @@
+{
+  "type": "function",
+  "function": {
+    "name": "log_disposition",
+    "description": "Log the call outcome to the CRM system. You MUST call this before ending every call. The disposition should accurately reflect what happened during the conversation.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "description": "The customer's internal ID"
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "EKYC_LINK_SENT",
+            "EKYC_STARTED",
+            "VKYC_SLOT_BOOKED",
+            "VKYC_EXPLAINED",
+            "ACTIVATION_COMPLETED",
+            "ACTIVATION_EXPLAINED",
+            "ORIENTATION_COMPLETED",
+            "OBJECTION_RESOLVED",
+            "DEFERRED",
+            "ESCALATED_TO_HUMAN",
+            "NO_ANSWER",
+            "SOFT_DECLINE"
+          ],
+          "description": "The call outcome code"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Brief summary of the conversation and any objections raised"
+        }
+      },
+      "required": ["customer_id", "disposition"]
+    }
+  },
+  "server": {
+    "url": "https://your-orchestrator-url.com/api/vapi/webhook"
+  }
+}

@@ -1,0 +1,320 @@
+[
+  {
+    "customer_id": "TC001",
+    "name": "Priya Sharma",
+    "phone": "+919876543210",
+    "email": "priya.sharma@example.com",
+    "pan_masked": "XXXXX1234A",
+    "aadhaar_masked": "XXXX XXXX 5678",
+    "language_preference": "en",
+    "onboarding_stage": "EKYC_PENDING",
+    "application_id": "APP-2026-001",
+    "credit_limit": 150000,
+    "risk_tier": "LOW",
+    "limit_revision_eligible": true,
+    "kyc_status": {
+      "ekyc_done": false,
+      "vkyc_done": false,
+      "vkyc_attempts": 0,
+      "failure_reason": null
+    },
+    "card_details": {
+      "virtual_card_ready": false,
+      "physical_card_eta": null,
+      "card_number_masked": null,
+      "activation_status": "INACTIVE"
+    },
+    "welcome_reward_status": "pending",
+    "campaign_source": "instagram_reels_q1",
+    "consent_status": true,
+    "call_history": [],
+    "created_at": "2026-03-10T10:00:00Z"
+  },
+  {
+    "customer_id": "TC002",
+    "name": "Rahul Mehta",
+    "phone": "+919876543211",
+    "email": "rahul.mehta@example.com",
+    "pan_masked": "XXXXX5678B",
+    "aadhaar_masked": "XXXX XXXX 9012",
+    "language_preference": "hi",
+    "onboarding_stage": "EKYC_PENDING",
+    "application_id": "APP-2026-002",
+    "credit_limit": 75000,
+    "risk_tier": "MEDIUM",
+    "limit_revision_eligible": true,
+    "kyc_status": {
+      "ekyc_done": false,
+      "vkyc_done": false,
+      "vkyc_attempts": 0,
+      "failure_reason": null
+    },
+    "card_details": {
+      "virtual_card_ready": false,
+      "physical_card_eta": null,
+      "card_number_masked": null,
+      "activation_status": "INACTIVE"
+    },
+    "welcome_reward_status": "pending",
+    "campaign_source": "google_search_brand",
+    "consent_status": true,
+    "call_history": [
+      {"timestamp": "2026-03-09T14:30:00Z", "outcome": "NO_ANSWER", "agent": "AI"}
+    ],
+    "created_at": "2026-03-08T09:00:00Z"
+  },
+  {
+    "customer_id": "TC003",
+    "name": "Ananya Iyer",
+    "phone": "+919876543212",
+    "email": "ananya.iyer@example.com",
+    "pan_masked": "XXXXX9012C",
+    "aadhaar_masked": "XXXX XXXX 3456",
+    "language_preference": "en",
+    "onboarding_stage": "VKYC_PENDING",
+    "application_id": "APP-2026-003",
+    "credit_limit": 200000,
+    "risk_tier": "LOW",
+    "limit_revision_eligible": true,
+    "kyc_status": {
+      "ekyc_done": true,
+      "vkyc_done": false,
+      "vkyc_attempts": 0,
+      "failure_reason": null
+    },
+    "card_details": {
+      "virtual_card_ready": false,
+      "physical_card_eta": null,
+      "card_number_masked": null,
+      "activation_status": "INACTIVE"
+    },
+    "welcome_reward_status": "pending",
+    "campaign_source": "flipkart_partnership",
+    "consent_status": true,
+    "call_history": [],
+    "created_at": "2026-03-07T11:00:00Z"
+  },
+  {
+    "customer_id": "TC004",
+    "name": "Vikram Patel",
+    "phone": "+919876543213",
+    "email": "vikram.patel@example.com",
+    "pan_masked": "XXXXX3456D",
+    "aadhaar_masked": "XXXX XXXX 7890",
+    "language_preference": "en",
+    "onboarding_stage": "VKYC_PENDING",
+    "application_id": "APP-2026-004",
+    "credit_limit": 100000,
+    "risk_tier": "MEDIUM",
+    "limit_revision_eligible": false,
+    "kyc_status": {
+      "ekyc_done": true,
+      "vkyc_done": false,
+      "vkyc_attempts": 1,
+      "failure_reason": "CONNECTION_TIMEOUT"
+    },
+    "card_details": {
+      "virtual_card_ready": false,
+      "physical_card_eta": null,
+      "card_number_masked": null,
+      "activation_status": "INACTIVE"
+    },
+    "welcome_reward_status": "pending",
+    "campaign_source": "youtube_preroll",
+    "consent_status": true,
+    "call_history": [
+      {"timestamp": "2026-03-08T11:00:00Z", "outcome": "VKYC_EXPLAINED", "agent": "AI"},
+      {"timestamp": "2026-03-09T15:00:00Z", "outcome": "VKYC_FAILED", "agent": "AI"}
+    ],
+    "created_at": "2026-03-06T08:00:00Z"
+  },
+  {
+    "customer_id": "TC005",
+    "name": "Deepika Nair",
+    "phone": "+919876543214",
+    "email": "deepika.nair@example.com",
+    "pan_masked": "XXXXX7890E",
+    "aadhaar_masked": "XXXX XXXX 1234",
+    "language_preference": "en",
+    "onboarding_stage": "ACTIVATION_PENDING",
+    "application_id": "APP-2026-005",
+    "credit_limit": 300000,
+    "risk_tier": "LOW",
+    "limit_revision_eligible": true,
+    "kyc_status": {
+      "ekyc_done": true,
+      "vkyc_done": true,
+      "vkyc_attempts": 1,
+      "failure_reason": null
+    },
+    "card_details": {
+      "virtual_card_ready": true,
+      "physical_card_eta": "2026-03-18",
+      "card_number_masked": "XXXX XXXX XXXX 4532",
+      "activation_status": "INACTIVE"
+    },
+    "welcome_reward_status": "pending",
+    "campaign_source": "amazon_cobrand",
+    "consent_status": true,
+    "call_history": [],
+    "created_at": "2026-03-05T10:00:00Z"
+  },
+  {
+    "customer_id": "TC006",
+    "name": "Arjun Reddy",
+    "phone": "+919876543215",
+    "email": "arjun.reddy@example.com",
+    "pan_masked": "XXXXX2345F",
+    "aadhaar_masked": "XXXX XXXX 6789",
+    "language_preference": "en",
+    "onboarding_stage": "ACTIVATION_PENDING",
+    "application_id": "APP-2026-006",
+    "credit_limit": 50000,
+    "risk_tier": "HIGH",
+    "limit_revision_eligible": false,
+    "kyc_status": {
+      "ekyc_done": true,
+      "vkyc_done": true,
+      "vkyc_attempts": 2,
+      "failure_reason": null
+    },
+    "card_details": {
+      "virtual_card_ready": true,
+      "physical_card_eta": "2026-03-17",
+      "card_number_masked": "XXXX XXXX XXXX 8901",
+      "activation_status": "INACTIVE"
+    },
+    "welcome_reward_status": "pending",
+    "campaign_source": "facebook_lookalike",
+    "consent_status": true,
+    "call_history": [
+      {"timestamp": "2026-03-08T10:00:00Z", "outcome": "ACTIVATION_EXPLAINED", "agent": "AI"},
+      {"timestamp": "2026-03-09T16:00:00Z", "outcome": "DEFERRED", "agent": "AI"}
+    ],
+    "created_at": "2026-03-04T09:00:00Z"
+  },
+  {
+    "customer_id": "TC007",
+    "name": "Kavya Krishnan",
+    "phone": "+919876543216",
+    "email": "kavya.k@example.com",
+    "pan_masked": "XXXXX6789G",
+    "aadhaar_masked": "XXXX XXXX 0123",
+    "language_preference": "en",
+    "onboarding_stage": "CARD_ACTIVE",
+    "application_id": "APP-2026-007",
+    "credit_limit": 250000,
+    "risk_tier": "LOW",
+    "limit_revision_eligible": true,
+    "kyc_status": {
+      "ekyc_done": true,
+      "vkyc_done": true,
+      "vkyc_attempts": 1,
+      "failure_reason": null
+    },
+    "card_details": {
+      "virtual_card_ready": true,
+      "physical_card_eta": "2026-03-16",
+      "card_number_masked": "XXXX XXXX XXXX 2345",
+      "activation_status": "ACTIVE"
+    },
+    "welcome_reward_status": "credited",
+    "campaign_source": "organic_app",
+    "consent_status": true,
+    "call_history": [],
+    "created_at": "2026-03-01T08:00:00Z"
+  },
+  {
+    "customer_id": "TC008",
+    "name": "Ravi Kumar",
+    "phone": "+919876543217",
+    "email": "ravi.kumar@example.com",
+    "pan_masked": "XXXXX0123H",
+    "aadhaar_masked": "XXXX XXXX 4567",
+    "language_preference": "hi",
+    "onboarding_stage": "EKYC_PENDING",
+    "application_id": "APP-2026-008",
+    "credit_limit": 125000,
+    "risk_tier": "MEDIUM",
+    "limit_revision_eligible": true,
+    "kyc_status": {
+      "ekyc_done": false,
+      "vkyc_done": false,
+      "vkyc_attempts": 0,
+      "failure_reason": null
+    },
+    "card_details": {
+      "virtual_card_ready": false,
+      "physical_card_eta": null,
+      "card_number_masked": null,
+      "activation_status": "INACTIVE"
+    },
+    "welcome_reward_status": "pending",
+    "campaign_source": "instagram_reels_q1",
+    "consent_status": false,
+    "call_history": [],
+    "created_at": "2026-03-10T12:00:00Z"
+  },
+  {
+    "customer_id": "TC009",
+    "name": "Sneha Gupta",
+    "phone": "+919876543218",
+    "email": "sneha.gupta@example.com",
+    "pan_masked": "XXXXX4567I",
+    "aadhaar_masked": "XXXX XXXX 8901",
+    "language_preference": "en",
+    "onboarding_stage": "EKYC_PENDING",
+    "application_id": "APP-2026-009",
+    "credit_limit": 175000,
+    "risk_tier": "LOW",
+    "limit_revision_eligible": true,
+    "kyc_status": {
+      "ekyc_done": false,
+      "vkyc_done": false,
+      "vkyc_attempts": 0,
+      "failure_reason": null
+    },
+    "card_details": {
+      "virtual_card_ready": false,
+      "physical_card_eta": null,
+      "card_number_masked": null,
+      "activation_status": "INACTIVE"
+    },
+    "welcome_reward_status": "pending",
+    "campaign_source": "referral_program",
+    "consent_status": true,
+    "call_history": [],
+    "created_at": "2026-03-10T14:00:00Z"
+  },
+  {
+    "customer_id": "TC010",
+    "name": "Aditya Joshi",
+    "phone": "+919876543219",
+    "email": "aditya.j@example.com",
+    "pan_masked": "XXXXX8901J",
+    "aadhaar_masked": "XXXX XXXX 2345",
+    "language_preference": "en",
+    "onboarding_stage": "VKYC_PENDING",
+    "application_id": "APP-2026-010",
+    "credit_limit": 500000,
+    "risk_tier": "LOW",
+    "limit_revision_eligible": true,
+    "kyc_status": {
+      "ekyc_done": true,
+      "vkyc_done": false,
+      "vkyc_attempts": 0,
+      "failure_reason": null
+    },
+    "card_details": {
+      "virtual_card_ready": false,
+      "physical_card_eta": null,
+      "card_number_masked": null,
+      "activation_status": "INACTIVE"
+    },
+    "welcome_reward_status": "pending",
+    "campaign_source": "platinum_upgrade",
+    "consent_status": true,
+    "call_history": [],
+    "created_at": "2026-03-09T16:00:00Z"
+  }
+]

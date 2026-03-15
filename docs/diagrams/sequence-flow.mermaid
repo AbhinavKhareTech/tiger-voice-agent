@@ -1,0 +1,105 @@
+---
+title: Tiger Voice Agent - Event-Driven Onboarding Sequence v2.0
+---
+sequenceDiagram
+    participant CDE as Credit Decision Engine
+    participant CPS as Customer Profile
+    participant KAFKA as Event Bus (Kafka)
+    participant SCHEMA as Schema Registry
+    participant DEDUP as Idempotency Cache (Redis)
+    participant ORC as Orchestration Layer
+    participant CE as Compliance Engine
+    participant REDIS as Redis Session Store
+    participant AGENT as Voice AI Agent (Runtime)
+    participant TOOLS as Tool Router + Policy GW
+    participant USER as Customer
+    participant KYC as KYC Provider
+    participant CIS as Card Issuer
+    participant CRM as CRM / Sales
+    participant NS as Notification System
+    participant DLQ as Dead Letter Queue
+    participant OBS as Observability (OTel)
+
+    Note over CDE,OBS: STAGE 1: Card Approved (with enhanced event infrastructure)
+
+    CDE->>SCHEMA: Validate card_approved schema
+    SCHEMA-->>CDE: Schema valid (v2.1)
+    CDE->>KAFKA: card_approved {event_id, customer_id, limit, risk_tier, correlation_id}
+    
+    KAFKA->>ORC: Consume event
+    ORC->>DEDUP: Check event_id in idempotency cache
+    DEDUP-->>ORC: NOT_SEEN (first delivery)
+    ORC->>DEDUP: Store event_id (7-day TTL)
+    
+    ORC->>OBS: Start distributed trace (correlation_id)
+    ORC->>CPS: Read customer profile (name, phone, lang)
+    CPS-->>ORC: Profile data
+    ORC->>CRM: Read call history, campaign_source
+    CRM-->>ORC: History + campaign data
+    
+    ORC->>CE: Pre-call check (consent, DND, time window, cooldown)
+    CE-->>ORC: CLEARED
+    
+    Note over ORC: Pre-call state refresh: verify stage hasn't advanced
+    ORC->>CPS: Re-read onboarding_stage (final check)
+    CPS-->>ORC: stage = EKYC_PENDING (confirmed)
+    
+    ORC->>REDIS: Store session context {customer_id, stage, variables}
+    ORC->>AGENT: Initiate call with EKYC_PENDING flow + system variables (PII masked)
+    
+    AGENT->>USER: "This is Tara, your AI assistant from Tiger Credit Card. This call is recorded..."
+    AGENT->>TOOLS: verify_identity(customer_id, user_response)
+    TOOLS->>CE: Policy check (identity verification permitted)
+    CE-->>TOOLS: APPROVED
+    TOOLS->>CPS: Verify identity data
+    CPS-->>TOOLS: VERIFIED
+    TOOLS-->>AGENT: verification_status = passed
+    
+    AGENT->>USER: Congratulations + credit limit + eKYC guidance
+    USER-->>AGENT: Response (questions / agreement)
+    
+    AGENT->>TOOLS: send_sms_link(customer_id, "ekyc_deeplink")
+    TOOLS->>CE: Policy check (SMS rate limit)
+    CE-->>TOOLS: APPROVED
+    TOOLS->>NS: Send SMS with deep link
+    NS->>USER: SMS delivered
+    
+    AGENT->>USER: Benefits summary + closing
+    AGENT->>TOOLS: log_disposition(customer_id, "ekyc_link_sent", notes)
+    TOOLS->>CRM: Write disposition
+    TOOLS->>CE: Write audit log
+    
+    ORC->>OBS: End trace (call_duration, outcome, latency_metrics)
+
+    Note over CDE,OBS: DUPLICATE EVENT HANDLING
+
+    KAFKA->>ORC: card_approved (REDELIVERED - same event_id)
+    ORC->>DEDUP: Check event_id
+    DEDUP-->>ORC: ALREADY_SEEN
+    ORC->>ORC: Acknowledge and discard (no action)
+
+    Note over CDE,OBS: FAILED EVENT HANDLING
+
+    KAFKA->>ORC: ekyc_completed {event_id, customer_id}
+    ORC->>CPS: Read customer profile
+    CPS-->>ORC: ERROR 503 (service unavailable)
+    ORC->>ORC: Retry 1 (after 1s backoff)
+    ORC->>CPS: Read customer profile
+    CPS-->>ORC: ERROR 503
+    ORC->>ORC: Retry 2 (after 5s backoff)
+    ORC->>CPS: Read customer profile
+    CPS-->>ORC: ERROR 503
+    ORC->>DLQ: Route to Dead Letter Queue {event, error, retry_count: 3}
+    ORC->>OBS: Alert: CPS unavailable, event sent to DLQ
+
+    Note over CDE,OBS: RACE CONDITION PREVENTION
+
+    KYC->>KAFKA: ekyc_completed {customer_id}
+    KAFKA->>ORC: Consume event
+    ORC->>CPS: Read profile
+    Note over ORC: 10 minutes pass (call queue delay)
+    Note over ORC: Customer completes VKYC independently during wait
+    ORC->>CPS: Pre-call state refresh
+    CPS-->>ORC: stage = ACTIVATION_PENDING (advanced!)
+    ORC->>ORC: Skip VKYC call, check if ACTIVATION_PENDING flow is queued
+    ORC->>OBS: Log: stage_skip {from: VKYC_PENDING, to: ACTIVATION_PENDING}

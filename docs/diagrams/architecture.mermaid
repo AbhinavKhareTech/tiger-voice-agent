@@ -1,0 +1,130 @@
+---
+title: Tiger Credit Card - AI Voice Agent Enterprise Architecture v2.0
+---
+graph TB
+    subgraph L1["LAYER 1: VOICE STREAMING INFRASTRUCTURE"]
+        direction LR
+        SIP["SIP Gateway\n(Call Signaling)"]
+        RTP["RTP Media Server\n(Audio Processing)"]
+        WEBRTC["WebRTC Bridge\n(In-App Voice)"]
+        DTMF["DTMF Decoder"]
+        REC["Call Recording\nTap & Fork"]
+        VAD_L1["Voicemail\nDetector"]
+    end
+
+    subgraph L2["LAYER 2: AI AGENT RUNTIME"]
+        direction LR
+        ASR["Streaming ASR\n(Deepgram/Whisper)"]
+        INTENT["Intent Detector\n+ Slot Filler"]
+        PLANNER["LLM Agent\nPlanner"]
+        ROUTER["Tool Router\n+ Policy Gateway"]
+        RESPGEN["Response\nGenerator"]
+        TTS["Streaming TTS\n(ElevenLabs/Azure)"]
+        VALIDATOR["Output\nValidator"]
+    end
+
+    subgraph L3["LAYER 3: AGENT ORCHESTRATION"]
+        direction LR
+        KAFKA["Event Bus\n(Kafka)"]
+        SCHEMA["Schema\nRegistry"]
+        SM["State Machine\nEngine"]
+        DECIDE["Decision Engine\n(Next Best Action)"]
+        COMPLY["Compliance\nGateway"]
+        APIGW["API Gateway"]
+        REDIS["Redis Session\nStore"]
+        DLQ["Dead Letter\nQueue"]
+    end
+
+    subgraph L4["LAYER 4: ENTERPRISE SYSTEMS"]
+        direction LR
+        CPS["Customer\nProfile"]
+        CDE["Credit\nDecision"]
+        KYC["KYC Provider\n(eKYC + VKYC)"]
+        CIS["Card Issuer\nSystem"]
+        CRM["CRM /\nSales"]
+        NS["Notification\nSystem"]
+        CE["Compliance\nEngine"]
+        TEL["Telephony\nPlatform"]
+    end
+
+    subgraph CUST["CUSTOMER"]
+        direction LR
+        APP["Mobile App"]
+        PHONE["Phone (PSTN)"]
+    end
+
+    subgraph OBS["OBSERVABILITY"]
+        direction LR
+        PROM["Prometheus\n+ Grafana"]
+        OTEL["OpenTelemetry\n(Traces)"]
+        ANALYTICS["Conversation\nAnalytics"]
+    end
+
+    %% Customer to Layer 1
+    APP <-->|"WebRTC Audio"| WEBRTC
+    PHONE <-->|"PSTN / SIP"| SIP
+    SIP <-->|"SIP Signaling"| TEL
+    WEBRTC -->|"RTP"| RTP
+    SIP -->|"RTP"| RTP
+    RTP -->|"Fork"| REC
+
+    %% Layer 1 to Layer 2 (streaming audio)
+    RTP -->|"Audio Stream\n(WebSocket)"| ASR
+    TTS -->|"Audio Chunks"| RTP
+
+    %% Layer 2 internal pipeline
+    ASR -->|"Transcript\n(partial + final)"| INTENT
+    INTENT -->|"Intent + Slots\n+ Confidence"| PLANNER
+    PLANNER -->|"Tool Call\nRequest"| ROUTER
+    PLANNER -->|"Response\nText (stream)"| RESPGEN
+    RESPGEN -->|"Validate"| VALIDATOR
+    VALIDATOR -->|"Approved\nText"| TTS
+    ROUTER -->|"Validated\nResult"| PLANNER
+
+    %% Layer 2 to Layer 3 (tool calls)
+    ROUTER -->|"Policy\nCheck"| COMPLY
+    COMPLY -->|"Approved\nCall"| APIGW
+    APIGW -->|"Result\n(PII masked)"| ROUTER
+
+    %% Layer 3 internal
+    KAFKA <-->|"Schema\nValidation"| SCHEMA
+    KAFKA -->|"Failed\nEvents"| DLQ
+    KAFKA -->|"Stage\nEvents"| SM
+    SM <-->|"State\nLookup"| REDIS
+    SM -->|"Next\nAction"| DECIDE
+    DECIDE -->|"Schedule\nCall"| APIGW
+
+    %% Layer 3 to Layer 4
+    APIGW <-->|"R/W"| CPS
+    APIGW <-->|"R"| CDE
+    APIGW <-->|"R/W"| KYC
+    APIGW <-->|"R/W"| CIS
+    APIGW <-->|"R/W"| CRM
+    APIGW -->|"Notify"| NS
+    COMPLY <-->|"Consent\n+ DND"| CE
+
+    %% Layer 4 events back to Kafka
+    CPS -.->|"stage_change"| KAFKA
+    KYC -.->|"kyc_event"| KAFKA
+    CIS -.->|"card_event"| KAFKA
+
+    %% Observability
+    L1 -.->|"Metrics"| PROM
+    L2 -.->|"Metrics +\nTraces"| OTEL
+    L3 -.->|"Metrics +\nTraces"| OTEL
+    OTEL -.->|"Dashboard"| PROM
+    L2 -.->|"Transcripts"| ANALYTICS
+
+    classDef customer fill:#34495E,stroke:#2C3E50,color:#fff
+    classDef voice fill:#2980B9,stroke:#1B4F72,color:#fff
+    classDef runtime fill:#27AE60,stroke:#1E8449,color:#fff
+    classDef orch fill:#F39C12,stroke:#D68910,color:#fff
+    classDef enterprise fill:#8E44AD,stroke:#6C3483,color:#fff
+    classDef obs fill:#E74C3C,stroke:#C0392B,color:#fff
+
+    class APP,PHONE customer
+    class SIP,RTP,WEBRTC,DTMF,REC,VAD_L1 voice
+    class ASR,INTENT,PLANNER,ROUTER,RESPGEN,TTS,VALIDATOR runtime
+    class KAFKA,SCHEMA,SM,DECIDE,COMPLY,APIGW,REDIS,DLQ orch
+    class CPS,CDE,KYC,CIS,CRM,NS,CE,TEL enterprise
+    class PROM,OTEL,ANALYTICS obs

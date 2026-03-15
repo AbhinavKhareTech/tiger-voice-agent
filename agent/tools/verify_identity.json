@@ -1,0 +1,24 @@
+{
+  "type": "function",
+  "function": {
+    "name": "verify_identity",
+    "description": "Verify the customer's identity by asking for the last 4 digits of their registered mobile number. Call this before disclosing any account-specific information. Maximum 3 attempts; after 3 failures, escalate to a human agent.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "description": "The customer's internal ID"
+        },
+        "response": {
+          "type": "string",
+          "description": "The customer's response (last 4 digits of their phone number)"
+        }
+      },
+      "required": ["customer_id", "response"]
+    }
+  },
+  "server": {
+    "url": "https://your-orchestrator-url.com/api/vapi/webhook"
+  }
+}

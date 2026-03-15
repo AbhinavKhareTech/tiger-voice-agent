@@ -1,0 +1,35 @@
+{
+  "name": "Tara - Tiger Credit Card Onboarding Agent",
+  "model": {
+    "provider": "openai",
+    "model": "gpt-4o",
+    "temperature": 0.3,
+    "systemMessage": "See agent/prompt.md for full system prompt. This config is a structural reference."
+  },
+  "voice": {
+    "provider": "11labs",
+    "voiceId": "21m00Tcm4TlvDq8ikWAM",
+    "stability": 0.6,
+    "similarityBoost": 0.8
+  },
+  "firstMessage": "This is Tara, your AI assistant from Tiger Credit Card. This call is being recorded for quality and compliance purposes. How are you doing today?",
+  "serverUrl": "https://your-orchestrator-url.com/api/vapi/webhook",
+  "serverUrlSecret": "your-webhook-secret",
+  "endCallFunctionEnabled": true,
+  "transcriber": {
+    "provider": "deepgram",
+    "model": "nova-2",
+    "language": "en"
+  },
+  "silenceTimeoutSeconds": 30,
+  "maxDurationSeconds": 600,
+  "backgroundSound": "off",
+  "backchannelingEnabled": true,
+  "hipaaEnabled": false,
+  "metadata": {
+    "product": "tiger_credit_card",
+    "version": "1.0.0",
+    "environment": "staging"
+  },
+  "_comment": "Tool definitions are in agent/tools/*.json. Register them via Vapi dashboard or API."
+}

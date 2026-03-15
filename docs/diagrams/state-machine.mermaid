@@ -1,0 +1,85 @@
+---
+title: Voice Agent Conversation State Machine v2.0
+---
+stateDiagram-v2
+    [*] --> INIT: Event Consumed from Kafka
+
+    INIT --> COMPLIANCE_CHECK: Customer context loaded
+    INIT --> BLOCKED: Missing consent / Data error
+
+    COMPLIANCE_CHECK --> GREETING: All checks passed (consent, DND, time window)
+    COMPLIANCE_CHECK --> BLOCKED: DND registered / Out of hours / Consent expired
+
+    GREETING --> IDENTITY_VERIFY: User answers, AI discloses identity + recording
+    GREETING --> RETRY: No answer / Voicemail detected
+
+    IDENTITY_VERIFY --> STAGE_FLOW: Identity verified (verify_identity tool pass)
+    IDENTITY_VERIFY --> ESCALATE: 3 failed verification attempts
+
+    STAGE_FLOW --> CONFIRMATION: Target action completed
+    STAGE_FLOW --> OBJECTION_HANDLER: User raises objection
+    STAGE_FLOW --> TOOL_EXECUTION: Agent needs system data or action
+    STAGE_FLOW --> ESCALATE: Critical system failure
+
+    TOOL_EXECUTION --> STAGE_FLOW: Tool result received (success)
+    TOOL_EXECUTION --> STAGE_FLOW: Tool failed, fallback used
+    TOOL_EXECUTION --> ESCALATE: Tool failed, no fallback available
+
+    OBJECTION_HANDLER --> STAGE_FLOW: Objection resolved (1-2 attempts)
+    OBJECTION_HANDLER --> ESCALATE: 3+ unresolved objections
+    OBJECTION_HANDLER --> ESCALATE: Customer requests human
+
+    CONFIRMATION --> WRAP_UP: Next steps communicated
+
+    ESCALATE --> WARM_TRANSFER: Context packaged, SIP REFER initiated
+    WARM_TRANSFER --> END: Human agent connected
+
+    RETRY --> RETRY_SCHEDULE: Schedule next attempt (exponential backoff)
+    RETRY_SCHEDULE --> INIT: Retry triggered at scheduled time
+    RETRY_SCHEDULE --> HUMAN_QUEUE: Max retries exceeded (5 attempts)
+
+    HUMAN_QUEUE --> END: Assigned to inside sales agent
+
+    WRAP_UP --> LOG_DISPOSITION: Summary delivered to customer
+    LOG_DISPOSITION --> END: Disposition written to CRM + audit log
+
+    BLOCKED --> SMS_FALLBACK: Send SMS/push notification instead
+    SMS_FALLBACK --> END: Notification sent, logged
+
+    END --> [*]
+
+    state STAGE_FLOW {
+        [*] --> ROUTE_STAGE
+        ROUTE_STAGE --> EKYC_FLOW: stage = EKYC_PENDING
+        ROUTE_STAGE --> VKYC_FLOW: stage = VKYC_PENDING
+        ROUTE_STAGE --> ACTIVATION_FLOW: stage = ACTIVATION_PENDING
+        ROUTE_STAGE --> ACTIVE_FLOW: stage = CARD_ACTIVE
+
+        state EKYC_FLOW {
+            [*] --> explain_ekyc
+            explain_ekyc --> guide_to_link
+            guide_to_link --> monitor_completion
+            monitor_completion --> [*]
+        }
+
+        state VKYC_FLOW {
+            [*] --> explain_vkyc
+            explain_vkyc --> check_time_window
+            check_time_window --> offer_slots
+            offer_slots --> book_slot
+            book_slot --> [*]
+        }
+
+        state ACTIVATION_FLOW {
+            [*] --> explain_activation
+            explain_activation --> guide_app_tap
+            guide_app_tap --> confirm_activation
+            confirm_activation --> [*]
+        }
+
+        state ACTIVE_FLOW {
+            [*] --> congratulate
+            congratulate --> card_orientation
+            card_orientation --> [*]
+        }
+    }

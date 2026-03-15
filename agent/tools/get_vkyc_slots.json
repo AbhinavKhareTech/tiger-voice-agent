@@ -1,0 +1,20 @@
+{
+  "type": "function",
+  "function": {
+    "name": "get_vkyc_slots",
+    "description": "Fetch available VKYC (video KYC) time slots. VKYC operates between 9 AM and 9 PM IST. Returns up to 5 slots for the requested date. Call this when the customer is at the VKYC_PENDING stage and ready to schedule.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "description": "Date to check slots for in YYYY-MM-DD format. Leave empty for today."
+        }
+      },
+      "required": []
+    }
+  },
+  "server": {
+    "url": "https://your-orchestrator-url.com/api/vapi/webhook"
+  }
+}
