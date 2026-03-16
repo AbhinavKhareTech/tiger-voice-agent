@@ -5,6 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "orchestrator"
 version = "0.1.0"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "redis",
+    "httpx",
+    "pytest",
+]
 
 [tool.setuptools.packages.find]
 where = ["."]
