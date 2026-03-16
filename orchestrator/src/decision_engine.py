@@ -109,7 +109,7 @@ class DecisionEngine:
         if context.credit_limit >= 300000:
             priority -= 5
 
-        priority = max(0, min(100, priority))
+        priority = min(100, priority)
 
         return CallDecision(
             should_call=True,

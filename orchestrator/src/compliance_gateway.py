@@ -106,15 +106,15 @@ class ComplianceGateway:
                 if not match.startswith("XXXXX"):
                     return False, "Response contains unmasked PAN number"
 
-        # Check for Aadhaar patterns (12 digits)
-        aadhaar_pattern = r"\b\d{4}\s?\d{4}\s?\d{4}\b"
-        if re.search(aadhaar_pattern, response_text):
-            return False, "Response contains potential Aadhaar number"
-
         # Check for full card numbers (16 digits)
         card_pattern = r"\b\d{4}\s?\d{4}\s?\d{4}\s?\d{4}\b"
         if re.search(card_pattern, response_text):
             return False, "Response contains potential card number"
+
+        # Check for Aadhaar patterns (12 digits)
+        aadhaar_pattern = r"\b\d{4}\s?\d{4}\s?\d{4}\b"
+        if re.search(aadhaar_pattern, response_text):
+            return False, "Response contains potential Aadhaar number"
 
         return True, "OK"
 
