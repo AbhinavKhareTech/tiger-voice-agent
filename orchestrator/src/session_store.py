@@ -5,7 +5,6 @@ and conversation state. Sessions expire after 1 hour (configurable).
 The agent is stateless across sessions but stateful within a session.
 """
 
-import json
 import logging
 import uuid
 from datetime import datetime, timezone
@@ -13,7 +12,7 @@ from datetime import datetime, timezone
 import redis.asyncio as redis
 
 from .config import settings
-from .models import CustomerContext, OnboardingStage, SessionState, ConversationState
+from .models import CustomerContext, SessionState, ConversationState
 
 log = logging.getLogger("orchestrator.session")
 

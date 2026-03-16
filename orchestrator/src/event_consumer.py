@@ -16,7 +16,6 @@ The consumer follows this pipeline:
 import asyncio
 import json
 import logging
-from datetime import datetime, timezone
 
 import httpx
 import redis.asyncio as redis

@@ -77,7 +77,7 @@ def main():
         call = resp.json()
         print(f"Call initiated: {call.get('id', 'unknown')}")
         print(f"Status: {call.get('status', 'unknown')}")
-        print(f"\nCheck orchestrator logs: make logs-orchestrator")
+        print("\nCheck orchestrator logs: make logs-orchestrator")
 
     except httpx.HTTPStatusError as e:
         print(f"Vapi API error: {e.response.status_code}")

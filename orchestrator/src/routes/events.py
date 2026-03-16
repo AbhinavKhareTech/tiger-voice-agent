@@ -6,7 +6,6 @@ events would arrive via Kafka. This endpoint provides an HTTP bridge for
 demo and testing scenarios.
 """
 
-import json
 import logging
 import uuid
 from datetime import datetime, timezone

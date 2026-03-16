@@ -1,10 +1,7 @@
 """Tests for the Vapi webhook handler (unit-level, no external deps)."""
 
 import json
-import pytest
-from unittest.mock import AsyncMock, patch
 
-from fastapi.testclient import TestClient
 
 
 class TestVapiWebhookParsing:
